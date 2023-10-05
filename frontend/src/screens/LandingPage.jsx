@@ -3,6 +3,7 @@ import { Button, Container, Row } from "react-bootstrap";
 import "./LandingPage.css";
 
 const LandingPage = () => {
+
   return (
     <div className="main">
       <Container>
@@ -14,10 +15,18 @@ const LandingPage = () => {
             </div>
             <div className="button-container">
               <a href="/login">
-                <Button size="lg" className="landingbutton">Login</Button>
+                <Button size="lg" className="landingbutton">
+                  Login
+                </Button>
               </a>
               <a href="/register">
-                <Button size="lg" className="landingbutton" variant="outline-primary">Sign up</Button>
+                <Button
+                  size="lg"
+                  className="landingbutton"
+                  variant="outline-primary"
+                >
+                  Sign up
+                </Button>
               </a>
             </div>
           </div>
