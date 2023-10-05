@@ -7,8 +7,11 @@ import Form from "react-bootstrap/esm/Form";
 import Col from "react-bootstrap/esm/Col";
 import Row from "react-bootstrap/esm/Row";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 function Header() {
+  const navigate = useNavigate();
+
   return (
     <Navbar
       expand="lg"
@@ -42,7 +45,14 @@ function Header() {
             <NavDropdown title="Furqan Ahmed" id="basic-nav-dropdown">
               <NavDropdown.Item href="#action/3.1">My Profile</NavDropdown.Item>
               <NavDropdown.Divider />
-              <NavDropdown.Item href="#action/3.4">Logout</NavDropdown.Item>
+              <NavDropdown.Item
+                onClick={() => {
+                  localStorage.removeItem("userInfo");
+                  navigate("/");
+                }}
+              >
+                Logout
+              </NavDropdown.Item>
             </NavDropdown>
           </Nav>
         </Navbar.Collapse>
