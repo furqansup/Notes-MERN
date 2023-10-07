@@ -1,49 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainScreen from "../components/MainScreen";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import "./login.css";
 import Loading from "../components/Loading";
 import ErrorMessage from "../components/ErrorMessage";
+import { useDispatch, useSelector } from "react-redux";
+import { login } from "../actions/userAction";
+import { useNavigate } from "react-router-dom";
 
-const Login = (history) => {
+const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [error, setError] = useState(false);
-  const [loading, setLoading] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { loading, error, userInfo } = userLogin;
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/mynotes");
+    }
+  }, [navigate, userInfo]);
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    try {
-      const config = {
-        headers: {
-          "Content-type": "application/json",
-        },
-      };
-
-      setLoading(true);
-
-      const { data } = await axios.post(
-        "/api/users/login",
-        {
-          email,
-          password,
-        },
-        config
-      );
-
-      console.log(data);
-      localStorage.setItem("userInfo", JSON.stringify(data));
-      setLoading(false);
-    } catch (error) {
-      console.log(error);
-      setError("Invalid Username or Password");
-      setLoading(false);
-    }
+    dispatch(login(email, password));
   };
 
   return (
@@ -80,7 +68,10 @@ const Login = (history) => {
         </Form>
         <Row className="py-3">
           <Col>
-            New Customer ? <Link to="/register">Register here</Link>
+            New Customer ?{" "}
+            <Link to="/register">
+              <span>Register here</span>
+            </Link>
           </Col>
         </Row>
       </div>

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import MainScreen from "../components/MainScreen";
 import ErrorMessage from "../components/ErrorMessage";
 import Loading from "../components/Loading";
@@ -6,8 +6,10 @@ import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import { Row, Col } from "react-bootstrap";
 import { Link } from "react-router-dom";
-import axios from "axios";
 import "./register.css";
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../actions/userAction";
+import { useNavigate } from "react-router-dom";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -19,47 +21,29 @@ const Register = () => {
   const [confirmpassword, setConfirmPassword] = useState("");
   const [message, setMessage] = useState(null);
   const [picMessage, setPicMessage] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const userRegister = useSelector((state) => state.userRegister);
+  const { loading, error, userInfo } = userRegister;
+
+  const navigate = useNavigate();
 
   const submitHandler = async (e) => {
     e.preventDefault();
 
-    console.log(email);
-
     if (password !== confirmpassword) {
-      setMessage("Passwords Do not Match");
+      setMessage("Passwords Do Not Match");
     } else {
-      setMessage(null);
-
-      try {
-        const config = {
-          headers: {
-            "Content-Type": "application/json",
-          },
-        };
-
-        setLoading(true);
-
-        const { data } = await axios.post(
-          "/api/users",
-          {
-            name,
-            pic,
-            email,
-            password,
-          },
-          config
-        );
-        console.log(data);
-        localStorage.setItem("userInfo", JSON.stringify(data));
-        setLoading(false);
-      } catch (error) {
-        setError("");
-        setLoading(false);
-      }
+      dispatch(register(name, email, password, pic));
     }
   };
+
+  useEffect(() => {
+    if (userInfo) {
+      navigate("/mynotes");
+    }
+  }, [navigate, userInfo]);
 
   const postDetails = (pics) => {
     if (!pics) {
@@ -164,7 +148,10 @@ const Register = () => {
         </Form>
         <Row className="py-3">
           <Col>
-            Have an Account ? <Link to="/login">Login</Link>
+            Have an Account ?{" "}
+            <Link to="/login">
+              <span>Login</span>
+            </Link>
           </Col>
         </Row>
       </div>

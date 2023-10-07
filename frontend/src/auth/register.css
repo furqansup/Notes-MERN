@@ -1,5 +1,13 @@
 .loginContainer {
-    display: flex;
-    flex-direction: column;
-    margin: 20px;
-  }
+  display: flex;
+  flex-direction: column;
+  margin: 20px;
+}
+
+span {
+  color: rgb(33, 90, 204);
+}
+
+span:hover {
+  text-decoration: underline;
+}
